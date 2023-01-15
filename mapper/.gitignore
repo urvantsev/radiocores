@@ -1,0 +1,16 @@
+# Python
+__pycache__
+venv
+
+# DVT
+.dvt
+
+# VCD
+*.vcd
+
+# Logs
+*.log
+
+# cocotb
+*.xml
+sim_build
