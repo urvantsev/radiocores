@@ -10,7 +10,7 @@ tasks:
       gp open Makefile &&
       gp open test_gray2bin.py &&
       make SIM=verilator &&
-      EXTRA_ARGS="--trace-fst --trace-structs" make SIM=verilator &&
+      EXTRA_ARGS="--trace-fst --trace-structs" make SIM=verilator ;
     command: >
       cd /workspace/qammod/mapper ;
       history -s EXTRA_ARGS=\"--trace-fst --trace-structs\" make SIM=verilator ;
