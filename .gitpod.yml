@@ -3,10 +3,8 @@ image:
 
 tasks:
   - before: >
-      pip3 install -e . &&
-      export COCOTB_REDUCED_LOG_FMT=1
+
     init: >
-      gp preview https://docs.cocotb.org/ &&
       cd /workspace/qammod/mapper &&
       gp open gray2bin.sv &&
       gp open Makefile &&
