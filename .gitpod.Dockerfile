@@ -17,7 +17,7 @@ RUN pip3 install -U cocotb
 RUN sudo apt-get update
 
 # Install all needed packages for all simulators
-RUN sudo apt-get install -y perl make flex gnat gtkwave swig autoconf g++ bison libfl2 libfl-dev ccache libgoogle-perftools-dev numactl perl-doc
+RUN sudo apt-get install -y perl make flex gnat swig autoconf g++ bison libfl2 libfl-dev ccache libgoogle-perftools-dev numactl perl-doc
 RUN sudo rm -rf /var/lib/apt/lists/*
 
 ## Install Verilator

@@ -11,11 +11,9 @@ tasks:
       gp open test_gray2bin.py &&
       make SIM=verilator &&
       EXTRA_ARGS="--trace-fst --trace-structs" make SIM=verilator &&
-      gtkwave dump.fst --rcvar 'initial_window_x 1920' --rcvar 'initial_window_y 1061' --rcvar 'do_initial_zoom_fit yes' &
     command: >
       cd /workspace/qammod/mapper ;
       history -s EXTRA_ARGS=\"--trace-fst --trace-structs\" make SIM=verilator ;
-      history -s gtkwave dump.fst --rcvar \'initial_window_x 1920\' --rcvar \'initial_window_y 1061\' --rcvar \'do_initial_zoom_fit yes\' ;
       history -d 3
 
 # NOTE: the geometry for gtkwave's fullscreen size can be found with xwininfo -root
