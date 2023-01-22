@@ -11,7 +11,7 @@ RUN pyenv global ${PYTHON_VERSION}
 RUN pip3 install --upgrade pip
 
 # Install extra packages
-RUN pip3 install -U cocotb
+RUN pip3 install -U cocotb numpy
 
 # Re-synchronize the OS package index
 RUN sudo apt-get update
