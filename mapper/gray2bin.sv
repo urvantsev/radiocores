@@ -1,9 +1,9 @@
 interface node_if #(
-    parameter int data_width = 16
-)(
-    input clk,
-    input rst
-);
+        parameter int data_width = 16
+    )(
+        input clk,
+        input rst
+    );
 
     logic [data_width-1:0] gray_code;
     logic [data_width-1:0] binary_code;
@@ -14,45 +14,45 @@ interface node_if #(
 endinterface
 
 module gray2bin #(
-    parameter int modulation_order = 16,
-    parameter int data_width = 16
-)(
-    input  logic clk,
-    input  logic rst,
-    input  logic [data_width-1:0] i_gray_code,
-    output logic [data_width-1:0] o_binary_code
-);
+        parameter int modulation_order = 16,
+        parameter int data_width = 16
+    )(
+        input  logic clk,
+        input  logic rst,
+        input  logic [data_width-1:0] i_gray_code,
+        output logic [data_width-1:0] o_binary_code
+    );
 
-localparam int num_nodes = $clog2(modulation_order) - 1;
+    localparam int num_nodes = $clog2(modulation_order) - 1;
 
-// Input flip-flop
-logic [data_width-1:0] input_ff;
+    // Input flip-flop
+    logic [data_width-1:0] input_ff;
 
-always_ff @(posedge clk) begin
-    if (~rst) input_ff <= 16'b0;
-    else input_ff <= i_gray_code;
-end
+    always_ff @(posedge clk) begin
+        if (~rst) input_ff <= 16'b0;
+        else input_ff <= i_gray_code;
+    end
 
-// Inter-node SVIF
-node_if my_if[num_nodes:0](clk, rst);
+    // Inter-node SVIF
+    node_if my_if[num_nodes:0](clk, rst);
 
-assign { my_if[0].gray_code, my_if[0].binary_code } = {2{input_ff}};
+    assign { my_if[0].gray_code, my_if[0].binary_code } = {2{input_ff}};
 
-// Gray to binary conversion nodes
-generate
-    // Generate nodes
-    for (genvar i = 0; i < num_nodes; i++) begin: nodes
-        node node_i(
-            .in_if(my_if[i]),
-            .out_if(my_if[i+1])
-        );
-    end: nodes;
-endgenerate
+    // Gray to binary conversion nodes
+    generate
+        // Generate nodes
+        for (genvar i = 0; i < num_nodes; i++) begin: nodes
+            node node_i(
+                .in_if(my_if[i]),
+                .out_if(my_if[i+1])
+            );
+        end: nodes;
+    endgenerate
 
-// Output flip-flop
-always_ff @(posedge clk) begin
-    o_binary_code <= my_if[num_nodes].binary_code;
-end
+    // Output flip-flop
+    always_ff @(posedge clk) begin
+        o_binary_code <= my_if[num_nodes].binary_code;
+    end
 
 endmodule
 
