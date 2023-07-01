@@ -14,3 +14,6 @@ venv
 # cocotb
 *.xml
 sim_build
+
+# Pictures
+*.png
