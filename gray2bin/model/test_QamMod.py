@@ -4,6 +4,7 @@ from numpy.linalg import norm
 from QamMod import QamMod
 import pytest
 
+
 class TestQamMod:
     """
     Tests QamMod
