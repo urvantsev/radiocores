@@ -6,7 +6,7 @@ from QamMod import QamMod
 
 class TestQamMod:
     """
-    The basic class that inherits unittest.TestCase
+    Tests QamMod
     """
     distance = 1.4                    # Constellation minimum distance
     order = 16                        # Number of modulation symbols
