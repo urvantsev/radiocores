@@ -1,0 +1,23 @@
+name: Run Tests
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Docker
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Build Docker image
+        run: docker build -t myapp .devcontainer
+
+      - name: Run pytest inside Docker container
+        run: |
+          docker run --rm -v ${{ github.workspace }}:/app myapp pytest
