@@ -1,0 +1,34 @@
+name: Run Tests and Publish Codecov Report
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Docker
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Build Docker image
+        run: docker build -t myapp .devcontainer
+
+      - name: Run pytest inside Docker container
+        run: |
+          ci_env=`bash <(curl -s https://codecov.io/env)`
+          docker run $ci_env -e CI=true --rm -v ${{ github.workspace }}:/app myapp pytest --cov gray2bin --cov-report=xml
+
+      - name: Check files
+        run: ls
+
+      - name: Publish Codecov report
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage.xml
+          fail_ci_if_error: true # optional (default = false)
+          verbose: true # optional (default = false)
