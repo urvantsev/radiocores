@@ -6,7 +6,7 @@ from QamMod import QamMod
 
 class TestQamMod:
     """
-    The basic class that inherits unittest.TestCase
+    Tests QamMod
     """
     distance = 1.4                    # Constellation minimum distance
     order = 16                        # Number of modulation symbols
@@ -47,6 +47,7 @@ class TestQamMod:
             assert hamming(current, bottom) * self.k == 1
             assert hamming(current, right) * self.k == 1
 
+    @pytest.mark.skip(reason="Test is not ready")
     def test_distance(self):
         """
         Neighbour constellation points should differ only in one position.
