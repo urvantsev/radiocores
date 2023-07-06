@@ -1,20 +1,29 @@
-name: ci
+name: Run Tests
 
-on:
-  pull_request:
-    branches:
-      - "main"
+on: [push, pull_request]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
+
     steps:
-      -
-        name: Checkout
-        uses: actions/checkout@v3
-      -
-        name: Build docker images
-        run: docker build -t local < .devcontainer/Dockerfile
-      -
-        name: Run tests
-        run: docker run -it -v $PWD:/srv -w/srv local pytest
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Docker
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+          dockerfile: .devcontainer/Dockerfile
+
+      - name: Build and run Docker container
+        run: docker-compose up --build -d
+
+      - name: Wait for services to start
+        run: sleep 10
+
+      - name: Run pytest inside Docker container
+        run: docker-compose exec -T app pytest
+
+      - name: Stop and remove Docker container
+        run: docker-compose down
