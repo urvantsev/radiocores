@@ -1,0 +1,11 @@
+cocotb
+numpy
+matplotlib
+ipykernel
+scipy
+pandas
+scikit-commpy
+toolz
+pytest
+pytest-cov
+ruff
