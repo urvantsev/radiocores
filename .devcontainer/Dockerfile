@@ -15,15 +15,16 @@ COPY --from=verible /usr/local/bin/verible* /usr/local/bin/
 # Copy Verilator binaries from the verilator stage
 COPY --from=verilator /usr/local/bin/verilator* /usr/local/bin/
 
+COPY ./.devcontainer/requirements.txt .
+
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     git
 
 # Set the working directory to /app
-WORKDIR /app
+# WORKDIR /app
 
 # Install cocotb and other Python dependencies
-COPY requirements.txt .
 RUN pip install --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
