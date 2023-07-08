@@ -15,7 +15,7 @@ COPY --from=verible /usr/local/bin/verible* /usr/local/bin/
 # Copy Verilator binaries from the verilator stage
 COPY --from=verilator /usr/local/bin/verilator* /usr/local/bin/
 
-COPY ./.devcontainer/requirements.txt .
+COPY requirements.txt .
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
