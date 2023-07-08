@@ -16,7 +16,7 @@ jobs:
           python-version: '3.x'
 
       - name: Build Docker image
-        run: docker build -t myapp .devcontainer
+        run: docker build -t myapp .
 
       - name: Run pytest inside Docker container
         run: |
