@@ -1,7 +1,6 @@
 # %%
 import matplotlib.pyplot as plt
 import numpy as np
-from toolz.functoolz import compose
 
 
 class QamMod:
@@ -9,78 +8,42 @@ class QamMod:
         self.order = order
         self.distance = distance
         self.format = '0' + str(int(np.log2(order))) + 'b'
+        self.center_offset = (np.sqrt(self.order)-1)/2
 
     def _split(self, x: int, order: int) -> tuple[int, int]:
-        return (int(x // np.sqrt(order)), int(x % np.sqrt(order)))
+        return int(x // np.sqrt(order)), int(x % np.sqrt(order))
 
-    def _geti(self, x: int) -> int:
-        return self._split(x, self.order)[0]
-
-    def _getq(self, x: int) -> int:
-        return self._split(x, self.order)[1]
-
-    def _gray2bin(self, x: int) -> int:
-        """
-        Transform vector of gray encoded values into vector of binary encoded
-        values.
-        """
-
-        def node(x): return x[0] >> 1, x[1] ^ (x[0] >> 1)
-
-        """
-        Compose node() (log2(order) - 1) times and apply composite func to
-        each element of x taking only second return value ([1]) from the
-        output tuple.
-        """
-        return compose(*(node,)*int(np.log2(self.order) - 1))((x,)*2)[1]
+    def _gray2bin(self, gray: int) -> int:
+        binary = 0
+        while (gray > 0):
+            binary ^= gray
+            gray = gray >> 1
+        return binary
 
     def _map(self, x):
-        return self.distance * (self._gray2bin(x) - (np.sqrt(self.order)-1)/2)
+        return self.distance * (self._gray2bin(x) - self.center_offset)
 
     def modulate(self, x):
-        """Transforms array of integers to QAM symbols.
-
-        Constraints:
-            - x is integer from the interval [0, order - 1]
-            - order is integer which should be a perfect square and power of 2
-            - distance is non-negative real which is a minimum distance
-              between modulation symbols
-        """
-        return self._map(self._geti(x)) - 1j*self._map(self._getq(x))
-
-    def get_constellation(self, dtype=int):
-        """
-        Returns matrix showing how input data would be mapped onto
-        constellation points.
-        """
-        x = np.arange(self.order)
-        m = [QamMod(self.order, self.distance).modulate(x_i) for x_i in x]
-
-        y = np.zeros(
-                shape=(
-                    int(np.sqrt(self.order)),
-                    int(np.sqrt(self.order))),
-                dtype=dtype)
-
-        for i, m_i in enumerate(m):
-            edge = (np.sqrt(self.order) - 1) / 2
-            row = int((edge - m_i.imag/self.distance))  # Get row
-            col = int((m_i.real/self.distance + edge))  # Get column
-
-            if dtype == int:
-                y[row, col] = int(x[i])
-            elif dtype == complex:
-                y[row, col] = m_i
-
-        return y
+        i, q = self._split(x, self.order)
+        return self._map(i) - 1j*self._map(q)
 
     def show_constellation(self):
         x = np.arange(self.order)
         points = [self.modulate(x_i) for x_i in x]
 
         for i, point in enumerate(points):
-            plt.plot(point.real, point.imag, '.', color='blue')
+            plt.scatter(point.real, point.imag, color='blue')
             plt.annotate(format(x[i], self.format), (point.real, point.imag))
 
         plt.show()
-        plt.savefig('./gray2bin/model/constellation.png')
+
+
+
+# %%
+order = 64
+distance = 1
+qammod = QamMod(order, distance)
+qammod.show_constellation()
+symbols = [qammod.modulate(x_i) for x_i in np.arange(order)]
+
+# %%

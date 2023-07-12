@@ -12,7 +12,7 @@
 				"shardulm94.trailing-spaces",
 				"ms-python.python",
 				"ms-toolsai.jupyter",
-				"charliermarsh.ruff",
+				"ms-python.flake8",
 				"eamodio.gitlens"
 			]
 		}

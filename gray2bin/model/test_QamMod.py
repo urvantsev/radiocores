@@ -1,69 +1,52 @@
 import numpy as np
 from scipy.spatial.distance import hamming
-from numpy.linalg import norm
 from QamMod import QamMod
-import pytest
 
 
 class TestQamMod:
-    """
-    Tests QamMod
-    """
-    distance = 1.4                    # Constellation minimum distance
-    order = 16                        # Number of modulation symbols
-    k = int(np.log2(order))           # Number of bits to represent order
-    qammod = QamMod(order, distance)  # Instantiate QamMod
-    qammod.show_constellation()       # Save constellation plot
-    m = qammod.get_constellation()    # Get signal constellation
+    DIRECTIONS = [(-1, 0), (0, -1), (1, 0), (0, 1)]
 
-    modulus = int(np.sqrt(order))
+    @classmethod
+    def setup_class(cls):
+        cls.order = 64
+        cls.distance = 1.4
+        cls.size = int(np.sqrt(cls.order))
+        cls.k = int(np.log2(cls.order))
+        cls.qam_mod = QamMod(cls.order, cls.distance)
+
+    def get_constellation(self, dtype=int):
+        x = np.arange(self.order)
+        m = [self.qam_mod.modulate(x_i) for x_i in x]
+
+        y = np.zeros(
+                shape=(
+                    int(np.sqrt(self.order)),
+                    int(np.sqrt(self.order))),
+                dtype=dtype)
+
+        for i, m_i in enumerate(m):
+            edge = (np.sqrt(self.order) - 1) / 2
+            row = int((edge - m_i.imag/self.distance))  # Get row
+            col = int((m_i.real/self.distance + edge))  # Get column
+
+            if dtype == int:
+                y[row, col] = int(x[i])
+            elif dtype == complex:
+                y[row, col] = m_i
+
+        return y
+
+    def get_point(self, constellation, row, col):
+        m_i = constellation[row % self.size, col % self.size]
+        return list(format(m_i, f'0{self.k}b'))
 
     def test_grayness(self):
-        """
-        Test that signal constellation satisfy "grayness" propery.
+        constellation = self.get_constellation()
 
-        Property: nearby points differ in one position.
+        for row, col in np.ndindex(constellation.shape):
+            current = self.get_point(constellation, row, col)
+            surrounding = [self.get_point(constellation, row + dr, col + dc)
+                           for dr, dc in self.DIRECTIONS]
 
-        Note: two points are nearby if only one coordinate differs by
-        "distance"
-        """
-        print(self.m)
-
-        def do_format(m_i):
-            return list(format(m_i, '0' + str(self.k) + 'b'))
-
-        def get_point(m, row, col):
-            return do_format(m[row % self.modulus, col % self.modulus])
-
-        for row, col in np.ndindex(self.m.shape):
-            current = get_point(self.m, row, col)
-
-            top = get_point(self.m, row - 1, col)
-            left = get_point(self.m, row, col-1)
-            bottom = get_point(self.m, row + 1, col)
-            right = get_point(self.m, row, col + 1)
-
-            assert hamming(current, top) * self.k == 1
-            assert hamming(current, left) * self.k == 1
-            assert hamming(current, bottom) * self.k == 1
-            assert hamming(current, right) * self.k == 1
-
-    @pytest.mark.skip(reason="Test is not ready")
-    def test_distance(self):
-        """
-        Neighbour constellation points should differ only in one position.
-        """
-        y = self.qammod.get_constellation(dtype=complex)
-
-        for q, i in np.ndindex(y.shape):
-            current = y[q,   i]
-
-            top = y[(q-1) % 8,  i % 8]
-            left = y[q % 8, (i-1) % 8]
-            bottom = y[(q+1) % 8, i % 8]
-            right = y[q % 8, (i+1) % 8]
-
-            assert norm(current - top) == self.distance
-            assert norm(current - left) == self.distance
-            assert norm(current - bottom) == self.distance
-            assert norm(current - right) == self.distance
+            assert all(hamming(current, point) * self.k == 1
+                       for point in surrounding)
