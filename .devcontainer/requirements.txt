@@ -8,4 +8,4 @@ scikit-commpy
 toolz
 pytest
 pytest-cov
-ruff
+black
