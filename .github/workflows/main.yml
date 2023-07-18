@@ -18,6 +18,9 @@ jobs:
       - name: Build Docker image
         run: docker build -t myapp .devcontainer
 
+      - name: Run Black Python formatter inside Docker container
+        run: docker run --rm -v ${{ github.workspace }}:/app myapp black --check /app
+
       - name: Run pytest inside Docker container
         run: |
           ci_env=`bash <(curl -s https://codecov.io/env)`

@@ -1,5 +1,5 @@
 import numpy as np
-from scipy.spatial.distance import hamming
+from typing import List
 from QamMod import QamMod
 
 
@@ -8,45 +8,84 @@ class TestQamMod:
 
     @classmethod
     def setup_class(cls):
+        """
+        Setting up testing parameters.
+        """
         cls.order = 64
         cls.distance = 1.4
         cls.size = int(np.sqrt(cls.order))
         cls.k = int(np.log2(cls.order))
         cls.qam_mod = QamMod(cls.order, cls.distance)
 
-    def get_constellation(self, dtype=int):
-        x = np.arange(self.order)
-        m = [self.qam_mod.modulate(x_i) for x_i in x]
+        cls.constellation_int = cls.generate_constellation(dtype=int)
+        cls.constellation_complex = cls.generate_constellation(dtype=complex)
 
-        y = np.zeros(
-                shape=(
-                    int(np.sqrt(self.order)),
-                    int(np.sqrt(self.order))),
-                dtype=dtype)
+    @classmethod
+    def generate_constellation(cls, dtype=int) -> np.ndarray:
+        """
+        Generate a QAM constellation array.
+        """
+        decimal_data = np.arange(cls.order)
+        modulated_symbols = [cls.qam_mod.modulate(data) for data in decimal_data]
 
-        for i, m_i in enumerate(m):
-            edge = (np.sqrt(self.order) - 1) / 2
-            row = int((edge - m_i.imag/self.distance))  # Get row
-            col = int((m_i.real/self.distance + edge))  # Get column
+        constellation = np.zeros((cls.size, cls.size), dtype=dtype)
+        offset = (cls.size - 1) / 2
 
-            if dtype == int:
-                y[row, col] = int(x[i])
-            elif dtype == complex:
-                y[row, col] = m_i
+        for data, symbol in zip(decimal_data, modulated_symbols):
+            row = int(offset - symbol.imag / cls.distance)
+            col = int(symbol.real / cls.distance + offset)
 
-        return y
+            constellation[row, col] = int(data) if dtype == int else symbol
 
-    def get_point(self, constellation, row, col):
-        m_i = constellation[row % self.size, col % self.size]
-        return list(format(m_i, f'0{self.k}b'))
+        return constellation
+
+    def get_binary_representation(
+        self, constellation: np.ndarray, row: int, col: int
+    ) -> List[str]:
+        """
+        Get binary representation of a point in the constellation array.
+        """
+        point = constellation[row % self.size, col % self.size]
+        return list(format(point, f"0{self.k}b"))
 
     def test_grayness(self):
-        constellation = self.get_constellation()
+        """
+        Check that each point in the constellation differs by one bit from its
+        neighbors.
+        """
+        for row, col in np.ndindex(self.constellation_int.shape):
+            current_point = self.get_binary_representation(
+                self.constellation_int, row, col
+            )
+            surrounding_points = [
+                self.get_binary_representation(
+                    self.constellation_int, row + dr, col + dc
+                )
+                for dr, dc in self.DIRECTIONS
+            ]
 
-        for row, col in np.ndindex(constellation.shape):
-            current = self.get_point(constellation, row, col)
-            surrounding = [self.get_point(constellation, row + dr, col + dc)
-                           for dr, dc in self.DIRECTIONS]
+            assert all(
+                sum(a != b for a, b in zip(current_point, point)) == 1
+                for point in surrounding_points
+            )
 
-            assert all(hamming(current, point) * self.k == 1
-                       for point in surrounding)
+    def test_distance(self):
+        """
+        Verify that the distances between all adjacent elements are equal to
+        the constellation distance set.
+        """
+        row_differences = self.calculate_differences(axis=0)
+        column_differences = self.calculate_differences(axis=1)
+
+        assert np.allclose(
+            row_differences, self.distance
+        ), f"Row distances not approximately {self.distance}"
+        assert np.allclose(
+            column_differences, self.distance
+        ), f"Column distances not approximately {self.distance}"
+
+    def calculate_differences(self, axis: int) -> np.ndarray:
+        """
+        Calculate differences along specified axis.
+        """
+        return np.abs(np.diff(self.constellation_complex, axis=axis))
