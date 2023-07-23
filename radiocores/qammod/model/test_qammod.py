@@ -1,6 +1,6 @@
 import numpy as np
 from typing import List
-from QamMod import QamMod
+import radiocores.qammod.model.qammod as qm
 
 
 class TestQamMod:
@@ -15,7 +15,6 @@ class TestQamMod:
         cls.distance = 1.4
         cls.size = int(np.sqrt(cls.order))
         cls.k = int(np.log2(cls.order))
-        cls.qam_mod = QamMod(cls.order, cls.distance)
 
         cls.constellation_int = cls.generate_constellation(dtype=int)
         cls.constellation_complex = cls.generate_constellation(dtype=complex)
@@ -26,7 +25,7 @@ class TestQamMod:
         Generate a QAM constellation array.
         """
         decimal_data = np.arange(cls.order)
-        modulated_symbols = [cls.qam_mod.modulate(data) for data in decimal_data]
+        modulated_symbols = [qm.qammod(data, cls.order, cls.distance) for data in decimal_data]
 
         constellation = np.zeros((cls.size, cls.size), dtype=dtype)
         offset = (cls.size - 1) / 2
