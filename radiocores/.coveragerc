@@ -1,0 +1,4 @@
+[run]
+omit =
+    # omit files with names
+    qammod/model/show_constellation.py
