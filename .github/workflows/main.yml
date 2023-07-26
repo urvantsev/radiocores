@@ -24,7 +24,7 @@ jobs:
       - name: Run pytest inside Docker container
         run: |
           ci_env=`bash <(curl -s https://codecov.io/env)`
-          docker run $ci_env -e CI=true --rm -v ${{ github.workspace }}:/app myapp pytest --cov gray2bin --cov-report=xml
+          docker run $ci_env -e CI=true --rm -v ${{ github.workspace }}:/app myapp pytest --cov radiocores --cov-report=xml
 
       - name: Check files
         run: ls
