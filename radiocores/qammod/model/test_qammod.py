@@ -25,7 +25,9 @@ class TestQamMod:
         Generate a QAM constellation array.
         """
         decimal_data = np.arange(cls.order)
-        modulated_symbols = [qm.qammod(data, cls.order, cls.distance) for data in decimal_data]
+        modulated_symbols = [
+            qm.qammod(data, cls.order, cls.distance) for data in decimal_data
+        ]
 
         constellation = np.zeros((cls.size, cls.size), dtype=dtype)
         offset = (cls.size - 1) / 2
