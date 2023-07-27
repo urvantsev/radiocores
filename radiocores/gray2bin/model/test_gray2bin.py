@@ -7,7 +7,8 @@ def bin2gray(binary: int) -> int:
     gray = binary ^ (binary >> 1)
     return gray
 
-@pytest.mark.parametrize('order', [4, 16, 64, 256])  # Add more orders if needed
+
+@pytest.mark.parametrize("order", [4, 16, 64, 256])  # Add more orders if needed
 def test_gray2bin(order):
     vec = np.arange(order)  # generate a vector of values
     vec_gray = np.vectorize(bin2gray)(vec)  # convert to Gray code
