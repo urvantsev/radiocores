@@ -9,3 +9,4 @@ toolz
 pytest
 pytest-cov
 black
+fusesoc
