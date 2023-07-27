@@ -7,15 +7,15 @@
 SIM ?= verilator
 TOPLEVEL_LANG ?= verilog
 
-VERILOG_SOURCES += ../rtl/converter.sv
+VERILOG_SOURCES += ../rtl/gray2bin.sv
 #VERILOG_SOURCES += $(PWD)/synth.v
 # use VHDL_SOURCES for VHDL files
 
 # TOPLEVEL is the name of the toplevel module in your Verilog or VHDL file
-TOPLEVEL = converter
+TOPLEVEL = gray2bin
 
 # MODULE is the basename of the Python test file
-MODULE = test_converter
+MODULE = test_gray2bin
 
 # Verilator VCD dump
 EXTRA_ARGS += --trace --trace-structs

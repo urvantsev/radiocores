@@ -1,0 +1,23 @@
+CAPI=2:
+name: :radiocores:gray2bin:0.0.001
+description: Gray to binary converter
+
+filesets:
+  rtl:
+    files:
+    - rtl/gray2bin.sv
+    file_type: systemVerilogSource
+
+targets:
+  default: &default
+    filesets:
+      - rtl
+    toplevel: gray2bin
+    parameters:
+      - MODULATION_ORDER
+
+parameters:
+  MODULATION_ORDER:
+    datatype    : int
+    description : Total number of modulation symbols
+    paramtype   : vlogparam

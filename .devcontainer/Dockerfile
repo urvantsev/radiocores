@@ -12,12 +12,15 @@ ENV LC_ALL=C
 # Copy Verible binaries from the verible stage
 COPY --from=verible /usr/local/bin/verible* /usr/local/bin/
 
-# Copy Verilator binaries from the verilator stage
+# Copy Verilator binaries and other necessary files from the verilator stage
 COPY --from=verilator /usr/local/bin/verilator* /usr/local/bin/
+COPY --from=verilator /usr/local/share/verilator/ /usr/local/share/verilator/
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
-    git
+    make \
+    git \
+    clang
 
 # Set the working directory to /app
 WORKDIR /app
