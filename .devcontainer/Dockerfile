@@ -32,3 +32,7 @@ RUN pip install --upgrade pip && \
 
 # Re-synchronize the OS package index
 RUN apt-get update && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Install radiocores as a python package in editable mode
+# TODO: Explore better dependency handling methods with Python
+RUN pip install -e .
