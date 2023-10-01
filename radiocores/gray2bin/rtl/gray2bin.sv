@@ -1,12 +1,12 @@
 interface node_if #(
-    parameter int DATA_WIDTH = 16
+    parameter int MODULATION_ORDER = 16
 ) (
     input clk,
     input rst_n
 );
 
-  logic [DATA_WIDTH-1:0] gray_code;
-  logic [DATA_WIDTH-1:0] binary_code;
+  logic [$clog2(MODULATION_ORDER)-1:0] gray_code;
+  logic [$clog2(MODULATION_ORDER)-1:0] binary_code;
 
   modport in(input clk, rst_n, gray_code, binary_code);
   modport out(output gray_code, binary_code);
@@ -14,19 +14,18 @@ interface node_if #(
 endinterface
 
 module gray2bin #(
-    parameter int MODULATION_ORDER = 16,
-    parameter int DATA_WIDTH = 16
+    parameter int MODULATION_ORDER = 16
 ) (
     input logic clk,
     input logic rst_n,
-    input logic [DATA_WIDTH-1:0] i_gray_code,
-    output logic [DATA_WIDTH-1:0] o_binary_code
+    input logic [$clog2(MODULATION_ORDER)-1:0] i_gray_code,
+    output logic [$clog2(MODULATION_ORDER)-1:0] o_binary_code
 );
 
   localparam int NumNodes = $clog2(MODULATION_ORDER) - 1;
 
   // Input flip-flop
-  logic [DATA_WIDTH-1:0] input_ff;
+  logic [$clog2(MODULATION_ORDER)-1:0] input_ff;
 
   always_ff @(posedge clk) begin
     if (~rst_n) input_ff <= '0;
@@ -60,14 +59,14 @@ module gray2bin #(
 endmodule
 
 module node #(
-    parameter int DATA_WIDTH = 16
+    parameter int MODULATION_ORDER = 16
 ) (
     node_if.in  in_if,
     node_if.out out_if
 );
 
-  logic [DATA_WIDTH-1:0] gray_code;
-  logic [DATA_WIDTH-1:0] binary_code;
+  logic [$clog2(MODULATION_ORDER)-1:0] gray_code;
+  logic [$clog2(MODULATION_ORDER)-1:0] binary_code;
 
   always_ff @(posedge in_if.clk) begin
     if (~in_if.rst_n) begin
