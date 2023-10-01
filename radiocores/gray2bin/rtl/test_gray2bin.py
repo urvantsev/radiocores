@@ -5,7 +5,7 @@ from cocotb.triggers import RisingEdge, Timer
 from cocotb.clock import Clock
 from cocotb.runner import get_runner
 
-from radiocores.gray2bin import gray2bin
+from radiocores.bin2gray import bin2gray
 
 
 @cocotb.test()
@@ -23,7 +23,7 @@ async def gray2bin_simple_test(dut):
 
     # Apply stimulus
     for i in range(10):
-        dut.i_gray_code <= gray2bin(i)
+        dut.i_gray_code <= bin2gray(i)
         await RisingEdge(dut.clk)
 
     # ... Here, you can check the DUT's outputs using asserts
@@ -38,7 +38,7 @@ def test_gray2bin_simple_test():
     runner.build(
         verilog_sources=sources,
         hdl_toplevel="gray2bin",
-        build_args=["--trace", "--trace-structs"],
+        build_args=["--trace", "--trace-structs", "--coverage"],
         always=True,
     )
 
