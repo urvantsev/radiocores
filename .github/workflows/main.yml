@@ -26,12 +26,15 @@ jobs:
           ci_env=`bash <(curl -s https://codecov.io/env)`
           docker run $ci_env -e CI=true --rm -v ${{ github.workspace }}:/app myapp pytest --cov-config=radiocores/.coveragerc --cov radiocores --cov-report=xml
 
+      - name: Generate Verilator LCOV report
+        run: verilator_coverage --annotate sim_build/annotated --annotate-min 1 --write-info sim_build/coverage.info sim_build/coverage.dat
+
       - name: Check files
         run: ls
 
       - name: Publish Codecov report
         uses: codecov/codecov-action@v3
         with:
-          file: ./coverage.xml
+          file: ./coverage.xml,sim_build/coverage.info
           fail_ci_if_error: true # optional (default = false)
           verbose: true # optional (default = false)
