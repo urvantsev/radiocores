@@ -27,7 +27,19 @@ jobs:
           docker run $ci_env -e CI=true --rm -v ${{ github.workspace }}:/app myapp pytest --cov-config=radiocores/.coveragerc --cov radiocores --cov-report=xml
 
       - name: Generate Verilator LCOV report
-        run: verilator_coverage --annotate sim_build/annotated --annotate-min 1 --write-info sim_build/coverage.info sim_build/coverage.dat
+        run: |
+          docker run \
+            $ci_env \
+            -e CI=true \
+            --rm \
+            -v ${{ github.workspace }}:/app \
+            -w /app \
+            myapp \
+            verilator_coverage \
+              --annotate sim_build/annotated \
+              --annotate-min 1 \
+              --write-info sim_build/coverage.info \
+              sim_build/coverage.dat
 
       - name: Check files
         run: ls
