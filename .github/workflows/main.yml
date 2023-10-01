@@ -1,4 +1,4 @@
-name: Run Tests and Publish Codecov Report
+name: radiocores
 
 on: [push, pull_request]
 
