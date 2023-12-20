@@ -20,7 +20,12 @@ COPY --from=verilator /usr/local/share/verilator/ /usr/local/share/verilator/
 RUN apt-get update && apt-get install -y \
     make \
     git \
-    clang
+    clang \
+    build-essential \
+    libffi-dev \
+    python3-dev \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/*
 
 # Set the working directory to /app
 WORKDIR /app
