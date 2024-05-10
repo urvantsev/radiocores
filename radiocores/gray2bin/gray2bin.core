@@ -1,11 +1,11 @@
 CAPI=2:
-name: :radiocores:gray2bin:0.0.001
+name: radiocores:gray2bin:0.0.1
 description: Gray to binary converter
 
 filesets:
   rtl:
     files:
-    - rtl/gray2bin.sv
+      - rtl/gray2bin.sv
     file_type: systemVerilogSource
 
 targets:
@@ -13,11 +13,26 @@ targets:
     filesets:
       - rtl
     toplevel: gray2bin
+    default_tool: vivado
+    tools:
+      vivado:
+        part: xc7z010clg400-1
     parameters:
-      - MODULATION_ORDER
+      - MODULATION_ORDER=16
+
+  synth:
+    <<: *default
+    description: Synthesize for Zybo
+    default_tool: vivado
+    tools:
+      vivado:
+        part: xc7z010clg400-1
+        pnr: none
+    parameters:
+      - MODULATION_ORDER=16
 
 parameters:
   MODULATION_ORDER:
-    datatype    : int
-    description : Total number of modulation symbols
-    paramtype   : vlogparam
+    datatype: int
+    description: "Total number of modulation symbols"
+    paramtype: vlogparam
