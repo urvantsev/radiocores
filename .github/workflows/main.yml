@@ -49,6 +49,8 @@ jobs:
       - name: Publish Codecov report
         uses: codecov/codecov-action@v3
         with:
+          token: ${{ secrets.CODECOV_TOKEN }}  # Ensure the token is used here
           file: ./coverage.xml,sim_build/coverage.info
-          fail_ci_if_error: true # optional (default = false)
-          verbose: true # optional (default = false)
+          fail_ci_if_error: true
+          verbose: true
+
