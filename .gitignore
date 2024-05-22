@@ -1,3 +1,8 @@
+#
+.*
+!.gitignore
+!.devcontainer
+
 # Python
 __pycache__
 venv
@@ -11,6 +16,7 @@ venv
 
 # Logs
 *.log
+*.jou
 
 # cocotb
 *.xml
