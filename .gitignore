@@ -2,6 +2,7 @@
 .*
 !.gitignore
 !.devcontainer
+!.github
 
 # Python
 __pycache__

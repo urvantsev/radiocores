@@ -2,7 +2,7 @@
 FROM hdlc/verible:latest AS verible
 
 # Verilator stage
-FROM hdlc/verilator:latest AS verilator
+FROM verilator/verilator:latest AS verilator
 
 # Base image
 FROM python:3-slim
@@ -24,6 +24,7 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     libffi-dev \
     python3-dev \
+    ccache \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 
