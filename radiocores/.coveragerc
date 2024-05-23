@@ -2,3 +2,4 @@
 omit =
     # omit files with names
     radiocores/qammod/model/show_constellation.py
+    radiocores/gray2bin/rtl/test_gray2bin.py
