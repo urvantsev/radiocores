@@ -24,7 +24,7 @@ jobs:
       - name: Run pytest inside Docker container
         run: |
           ci_env=`bash <(curl -s https://codecov.io/env)`
-          docker run $ci_env -e CI=true --rm -v ${{ github.workspace }}:/app myapp pytest --cov-config=radiocores/.coveragerc --cov radiocores --cov-report=xml
+          docker run $ci_env -e CI=true --rm -v ${{ github.workspace }}:/app myapp pytest -s --log-cli-level=DEBUG --pdb --cov-config=radiocores/.coveragerc --cov radiocores --cov-report=xml
 
       # Translate verilator coverage report to LCOV report.
       # Example: https://github.com/verilator/example-systemverilog/tree/master
