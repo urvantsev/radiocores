@@ -1,4 +1,5 @@
 import os
+import sys
 from cocotb.runner import get_runner
 from pathlib import Path
 import pytest
@@ -7,7 +8,7 @@ import pytest
 proj_path = Path(__file__).resolve().parent
 sources = [proj_path / "gray2bin.sv"]
 
-@pytest.mark.parametrize("test_module", ["tests.test_gray2bin"])
+@pytest.mark.parametrize("test_module", ["tests.test_gray2bin", "tests.test_pyuvm_gray2bin"])
 def test_cocotb_simulation(test_module):
     build_dir = proj_path / f"sim_build_{test_module.split('.')[-1]}"
     vcd_file = build_dir / f"{test_module.split('.')[-1]}.vcd"
