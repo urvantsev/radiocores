@@ -28,3 +28,6 @@ sim_build
 
 # FuseSoC
 build
+
+# sim_build
+sim_build*
