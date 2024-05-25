@@ -3,7 +3,6 @@ import platform
 import cocotb
 from cocotb.triggers import RisingEdge, Timer, Event, with_timeout
 from cocotb.clock import Clock
-from cocotb.runner import get_runner
 from pathlib import Path
 import logging
 from radiocores.bin2gray import bin2gray
@@ -91,23 +90,3 @@ async def gray2bin_simple_test(dut):
     assert (
         input_data == output_data
     ), f"Expected output {input_data}, but got {output_data}."
-
-
-def test_gray2bin_simple_test():
-    proj_path = Path(__file__).resolve().parent
-
-    sources = [proj_path / "gray2bin.sv"]
-
-    runner = get_runner("verilator")
-    runner.build(
-        verilog_sources=sources,
-        hdl_toplevel="gray2bin",
-        build_args=["--trace", "--trace-structs", "--coverage"],
-        always=True,
-    )
-
-    runner.test(hdl_toplevel="gray2bin", test_module="test_gray2bin")
-
-
-if __name__ == "__main__":
-    test_gray2bin_simple_test()
