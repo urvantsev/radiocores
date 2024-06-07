@@ -13,9 +13,9 @@
 				"ms-python.python",
 				"ms-toolsai.jupyter",
 				"ms-python.black-formatter",
-				"eamodio.gitlens",
 				"mhutchie.git-graph",
-				"surfer-project.surfer"
+				"surfer-project.surfer",
+				"hediet.vscode-drawio"
 			]
 		}
 	}
