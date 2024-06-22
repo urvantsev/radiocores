@@ -7,8 +7,9 @@ interface gray2bin_if #(
     input logic clk,
     input logic rst
 );
-  logic [$clog2(MODULATION_ORDER)-1:0] gray_code;
-  logic [$clog2(MODULATION_ORDER)-1:0] binary_code;
+  localparam int BitWidth = $clog2(MODULATION_ORDER)/2;
+  logic [BitWidth-1:0] gray_code;
+  logic [BitWidth-1:0] binary_code;
   logic i_dv;
   logic o_dv;
 
