@@ -24,10 +24,23 @@ jobs:
       - name: Run pytest inside Docker container
         run: |
           ci_env=`bash <(curl -s https://codecov.io/env)`
-          docker run $ci_env -e CI=true --rm -v ${{ github.workspace }}:/app myapp pytest -s --log-cli-level=DEBUG --pdb --cov-config=radiocores/.coveragerc --cov radiocores --cov-report=xml
+          docker run $ci_env -e CI=true --rm -v ${{ github.workspace }}:/app myapp pytest --cov-config=radiocores/.coveragerc --cov radiocores --cov-report=xml
 
-      # Translate verilator coverage report to LCOV report.
-      # Example: https://github.com/verilator/example-systemverilog/tree/master
+      # Ensure the sim_build directory exists
+      - name: Create sim_build directory
+        run: mkdir -p sim_build
+
+      # Merge all coverage.dat files
+      - name: Merge and generate coverage in Docker
+        run: |
+          ci_env=$(bash <(curl -s https://codecov.io/env))
+          docker run $ci_env -e CI=true --rm -v ${{ github.workspace }}:/app -w /app myapp /bin/bash -c "
+            find . -name 'coverage.dat' > sim_build/coverage_files.txt && \
+            verilator_coverage -write sim_build/merged_coverage.dat \$(cat sim_build/coverage_files.txt) && \
+            verilator_coverage --annotate sim_build/annotated --annotate-min 1 --write-info sim_build/coverage.info sim_build/merged_coverage.dat
+          "
+
+      # Translate merged coverage report to LCOV report
       - name: Generate Verilator LCOV report
         run: |
           docker run \
@@ -41,7 +54,7 @@ jobs:
               --annotate sim_build/annotated \
               --annotate-min 1 \
               --write-info sim_build/coverage.info \
-              sim_build/coverage.dat
+              sim_build/merged_coverage.dat
 
       - name: Check files
         run: ls
@@ -49,8 +62,7 @@ jobs:
       - name: Publish Codecov report
         uses: codecov/codecov-action@v3
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}  # Ensure the token is used here
+          token: ${{ secrets.CODECOV_TOKEN }}
           file: ./coverage.xml,sim_build/coverage.info
           fail_ci_if_error: true
           verbose: true
-
