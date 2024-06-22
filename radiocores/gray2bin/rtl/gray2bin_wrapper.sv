@@ -5,13 +5,13 @@
 `include "gray2bin.sv"
 
 module gray2bin_wrapper #(
-    parameter int MODULATION_ORDER = 16
+    parameter int MODULATION_ORDER = 64
 ) (
     input logic clk,
     input logic rst,
-    input logic [$clog2(MODULATION_ORDER)-1:0] i_gray_code,
+    input logic [$clog2(MODULATION_ORDER)/2-1:0] i_gray_code,
     input logic i_dv,
-    output logic [$clog2(MODULATION_ORDER)-1:0] o_binary_code,
+    output logic [$clog2(MODULATION_ORDER)/2-1:0] o_binary_code,
     output logic o_dv
 );
 

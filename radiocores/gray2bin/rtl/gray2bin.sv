@@ -12,7 +12,7 @@ module gray2bin #(
     gray2bin_if.out out_if  // Output interface
 );
 
-  localparam int NumNodes = $clog2(MODULATION_ORDER);
+  localparam int NumNodes = $clog2(MODULATION_ORDER)/2;
 
   // Inter-node SVIF array
   node_if #(MODULATION_ORDER) my_if[NumNodes:0] (

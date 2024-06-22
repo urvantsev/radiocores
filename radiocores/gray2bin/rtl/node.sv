@@ -10,8 +10,9 @@ module node #(
     node_if.out out_if
 );
 
-  logic [$clog2(MODULATION_ORDER)-1:0] gray_code;
-  logic [$clog2(MODULATION_ORDER)-1:0] binary_code;
+  localparam int BitWidth = $clog2(MODULATION_ORDER)/2;
+  logic [BitWidth-1:0] gray_code;
+  logic [BitWidth-1:0] binary_code;
   logic dv;
 
   always_ff @(posedge in_if.clk) begin
