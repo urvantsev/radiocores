@@ -1,7 +1,7 @@
 import os
+import pytest
 from cocotb.runner import get_runner
 from pathlib import Path
-import pytest
 
 # Define the project path and sources
 proj_path = Path(__file__).resolve().parent
@@ -36,6 +36,7 @@ def test_cocotb_simulation(test_module):
         build_args=["--trace", "--trace-structs", "--coverage"] + include_args,
         always=True,
     )
+
     # Run the test
     runner.test(hdl_toplevel="gray2bin_wrapper", test_module=test_module)
 

@@ -26,6 +26,15 @@ jobs:
           ci_env=`bash <(curl -s https://codecov.io/env)`
           docker run $ci_env -e CI=true --rm -v ${{ github.workspace }}:/app myapp pytest --cov-config=radiocores/.coveragerc --cov radiocores --cov-report=xml
 
+      # Upload test logs as artifacts such that it is possible explore them in GitHub Actions
+      - name: Upload test logs
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-logs
+          path: |
+            sim_build_*/test.log
+            sim_build/test.log
+
       # Ensure the sim_build directory exists
       - name: Create sim_build directory
         run: mkdir -p sim_build
