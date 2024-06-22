@@ -13,6 +13,7 @@ logging.basicConfig(
     force=True,
 )
 
+
 async def supply_input_data(dut, input_data, input_done):
     """Coroutine to supply input data to the DUT"""
     for i in input_data:
