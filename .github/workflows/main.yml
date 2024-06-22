@@ -31,12 +31,14 @@ jobs:
         run: mkdir -p sim_build
 
       # Merge all coverage.dat files
-      - name: Merge Verilator coverage data
+      - name: Merge and generate coverage in Docker
         run: |
-          # Find all coverage.dat files
-          find . -name 'coverage.dat' > sim_build/coverage_files.txt
-          # Merge the coverage data files
-          verilator_coverage -write sim_build/merged_coverage.dat $(cat sim_build/coverage_files.txt)
+          ci_env=$(bash <(curl -s https://codecov.io/env))
+          docker run $ci_env -e CI=true --rm -v ${{ github.workspace }}:/app -w /app myapp /bin/bash -c "
+            find . -name 'coverage.dat' > sim_build/coverage_files.txt && \
+            verilator_coverage -write sim_build/merged_coverage.dat \$(cat sim_build/coverage_files.txt) && \
+            verilator_coverage --annotate sim_build/annotated --annotate-min 1 --write-info sim_build/coverage.info sim_build/merged_coverage.dat
+          "
 
       # Translate merged coverage report to LCOV report
       - name: Generate Verilator LCOV report
