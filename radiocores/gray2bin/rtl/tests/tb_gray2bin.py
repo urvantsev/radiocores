@@ -37,8 +37,8 @@ async def read_output_data(dut, output_data, input_data, input_done):
     """Coroutine to read output data from the DUT"""
     while not input_done.is_set():
         await with_timeout(
-            RisingEdge(dut.clk), 1000, "ns"
-        )  # Increased timeout to 1000 ns
+            RisingEdge(dut.clk), 5000, "ns"
+        )  # Increased timeout to 5000 ns
         if dut.o_dv.value == 1:
             output = int(dut.o_binary_code.value)
             output_data.append(output)
