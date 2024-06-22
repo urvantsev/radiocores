@@ -2,7 +2,7 @@
 FROM hdlc/verible:latest AS verible
 
 # Verilator stage
-FROM verilator/verilator:latest AS verilator
+FROM verilator/verilator:v5.024 AS verilator
 
 # Base image
 FROM python:3-slim
