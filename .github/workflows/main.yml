@@ -26,6 +26,20 @@ jobs:
           ci_env=`bash <(curl -s https://codecov.io/env)`
           docker run $ci_env -e CI=true --rm -v ${{ github.workspace }}:/app myapp pytest --cov-config=radiocores/.coveragerc --cov radiocores --cov-report=xml
 
+      - name: Upload test logs in Docker
+        run: |
+          docker run -e CI=true --rm -v ${{ github.workspace }}:/app -w /app myapp /bin/bash -c "
+            find radiocores/gray2bin/rtl/sim_build_* -name '*.log' -exec echo '{}' \; > /tmp/log_files.txt && \
+            tar -czf /tmp/test_logs.tar.gz -T /tmp/log_files.txt
+          "
+        continue-on-error: true
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-logs
+          path: /tmp/test_logs.tar.gz
+
       # Ensure the sim_build directory exists
       - name: Create sim_build directory
         run: mkdir -p sim_build
