@@ -1,0 +1,3 @@
++incdir+./radiocores/include
++incdir+./radiocores/qammod/rtl
++incdir+./radiocores/gray2bin/rtl
