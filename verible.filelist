@@ -7,7 +7,7 @@
 ./radiocores/qammod/rtl/qammod.sv
 ./radiocores/qammod/rtl/qammod_wrapper.sv
 ./radiocores/skid_buffer/rtl/skid_buffer.sv
-./radiocores/drop_set/rtl/drop_set.sv
-radiocores/drop_set/rtl/ready_valid_if.sv
-./radiocores/drop_set/rtl/is_ready.sv
-./radiocores/drop_set/rtl/is_valid.sv
+./radiocores/skid_buffer/rtl/drop_set.sv
+./radiocores/skid_buffer/rtl/rv_if.sv
+./radiocores/skid_buffer/rtl/is_ready.sv
+./radiocores/skid_buffer/rtl/is_valid.sv
