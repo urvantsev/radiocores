@@ -1,22 +1,22 @@
 {
-	"name": "Existing Dockerfile",
-	"build": {
-		"context": ".",
-		"dockerfile": "Dockerfile"
-	},
-	"customizations": {
-		"vscode": {
-			"extensions": [
-				"CHIPSAlliance.verible",
-				"gvekony.systemverilog-1800-2012",
-				"shardulm94.trailing-spaces",
-				"ms-python.python",
-				"ms-toolsai.jupyter",
-				"ms-python.black-formatter",
-				"mhutchie.git-graph",
-				"surfer-project.surfer",
-				"hediet.vscode-drawio"
-			]
-		}
-	}
+    "name": "Existing Dockerfile",
+    "build": {
+        "context": ".",
+        "dockerfile": "Dockerfile"
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "CHIPSAlliance.verible",
+                "gvekony.systemverilog-1800-2012",
+                "shardulm94.trailing-spaces",
+                "ms-python.python",
+                "ms-toolsai.jupyter",
+                "ms-python.black-formatter",
+                "mhutchie.git-graph",
+                "surfer-project.surfer",
+                "hediet.vscode-drawio"
+            ]
+        }
+    }
 }

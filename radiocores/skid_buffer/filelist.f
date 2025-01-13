@@ -1,4 +1,6 @@
+./rtl/drop_set.sv
+./rtl/rv_if.sv
+./rtl/is_ready.sv
+./rtl/is_valid.sv
 ./rtl/skid_buffer.sv
-../var_hold_set/rtl/hold_set.sv
-../var_hold_set/rtl/is_ready.sv
-../var_hold_set/rtl/is_valid.sv
+./tb/tb_skid_buffer.sv
