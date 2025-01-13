@@ -37,23 +37,23 @@ RUN apt-get update && apt-get install -y \
  && rm -rf /var/lib/apt/lists/*
 
 # Define the SystemC version and installation directory
-ENV SYSTEMC_VERSION=2.3.3
-ENV SYSTEMC_DIR=/usr/local/systemc-$SYSTEMC_VERSION
+# ENV SYSTEMC_VERSION=2.3.3
+# ENV SYSTEMC_DIR=/usr/local/systemc-$SYSTEMC_VERSION
 
 # Download and install SystemC
-RUN wget http://www.accellera.org/images/downloads/standards/systemc/systemc-$SYSTEMC_VERSION.tar.gz && \
-    tar -xvf systemc-$SYSTEMC_VERSION.tar.gz && \
-    cd systemc-$SYSTEMC_VERSION && \
-    mkdir objdir && \
-    cd objdir && \
-    cmake .. -DCMAKE_INSTALL_PREFIX=$SYSTEMC_DIR -DCMAKE_CXX_STANDARD=11 && \
-    make -j$(nproc) && \
-    make install && \
-    cd ../.. && \
-    rm -rf systemc-$SYSTEMC_VERSION systemc-$SYSTEMC_VERSION.tar.gz
+# RUN wget http://www.accellera.org/images/downloads/standards/systemc/systemc-$SYSTEMC_VERSION.tar.gz && \
+#     tar -xvf systemc-$SYSTEMC_VERSION.tar.gz && \
+#     cd systemc-$SYSTEMC_VERSION && \
+#     mkdir objdir && \
+#     cd objdir && \
+#     cmake .. -DCMAKE_INSTALL_PREFIX=$SYSTEMC_DIR -DCMAKE_CXX_STANDARD=11 && \
+#     make -j$(nproc) && \
+#     make install && \
+#     cd ../.. && \
+#     rm -rf systemc-$SYSTEMC_VERSION systemc-$SYSTEMC_VERSION.tar.gz
 
 # Set environment variables for SystemC
-ENV SYSTEMC_HOME=$SYSTEMC_DIR
+# ENV SYSTEMC_HOME=$SYSTEMC_DIR
 ENV LD_LIBRARY_PATH=$SYSTEMC_HOME/lib:$LD_LIBRARY_PATH
 ENV CPLUS_INCLUDE_PATH=$SYSTEMC_HOME/include:$CPLUS_INCLUDE_PATH
 
