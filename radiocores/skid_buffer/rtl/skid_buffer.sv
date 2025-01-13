@@ -1,31 +1,21 @@
 module skid_buffer (
-    input logic clk,
-    input logic rst,
-    rv_if.ingress rv_i,
-    rv_if.egress rv_e
+    rv_if.in  rv_i,
+    rv_if.out rv_o
 );
 
-  rv_if my_rv ();
-  logic [7:0] data_buf, data_sel;
-
-  is_ready is_ready_i0 (
-      .clk (clk),
-      .rst (rst),
-      .rv_i(rv_i),
-      .rv_e(my_rv.egress_rv),
-      .data(data_buf)
+  rv_if intf (
+    .clk(rv_i.clk),
+    .rst(rv_i.rst)
   );
 
-  always_comb begin
-    data_sel = rv_i.ready ? rv_i.data : data_buf;
-  end
+  is_ready breg_i0 (
+    .rv_i(rv_i),
+    .rv_o(intf)
+  );
 
-  is_valid is_valid_i0 (
-      .clk (clk),
-      .rst (rst),
-      .rv_i(my_rv.ingress_rv),
-      .data(data_sel),
-      .rv_e(rv_e)
+  is_valid oreg_i0 (
+    .rv_i(intf),
+    .rv_o(rv_o)
   );
 
 endmodule

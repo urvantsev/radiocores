@@ -13,26 +13,30 @@ module skid_buffer_top (
     output logic [7:0] e_data
 );
 
-  // Instantiate internal ingress and egress interfaces
-  rv_if ingress_if (.clk(clk), .rst(rst));
-  rv_if egress_if (.clk(clk), .rst(rst));
+  rv_if rv_i (
+    .clk(clk),
+    .rst(rst)
+  );
 
-  // Connect top-level ingress signals to ingress_if interface
-  assign ingress_if.valid = i_valid;
-  assign i_ready = ingress_if.ready;
-  assign ingress_if.data = i_data;
+  rv_if rv_o (
+    .clk(clk),
+    .rst(rst)
+  );
 
-  // Connect top-level egress signals to egress_if interface
-  assign e_valid = egress_if.valid;
-  assign egress_if.ready = e_ready;
-  assign e_data = egress_if.data;
+  // Connect top-level ingress signals to rv_i interface
+  assign rv_i.valid = i_valid;
+  assign i_ready    = rv_i.ready;
+  assign rv_i.data  = i_data;
+
+  // Connect top-level egress signals to rv_o interface
+  assign e_valid    = rv_o.valid;
+  assign rv_o.ready = e_ready;
+  assign e_data     = rv_o.data;
 
   // Instantiate skid_buffer and connect internal interfaces
   skid_buffer u_skid_buffer (
-      .clk (clk),
-      .rst (rst),
-      .rv_i(ingress_if),
-      .rv_e(egress_if)
+      .rv_i(rv_i),
+      .rv_e(rv_o)
   );
 
 endmodule
